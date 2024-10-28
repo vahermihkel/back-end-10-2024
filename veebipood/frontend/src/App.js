@@ -8,11 +8,13 @@ function App() {
    useEffect(() => {
         fetch("http://localhost:8080/products")
             .then(res => res.json())
-            .then(json => setProducts(json));
+            .then(json => setProducts(json.content));
    }, []);
 
    const lisa = () => {
-        fetch("http://localhost:8080/add-product?name=coca&price=2")
+        fetch("http://localhost:8080/add-product?name=coca&price=2"
+          // , {method: "POST", body: JSON.stringify(), headers: {"Content-Type": "application/json"}}
+        )
                .then(res => res.json())
                .then(json => setProducts(json));
    }

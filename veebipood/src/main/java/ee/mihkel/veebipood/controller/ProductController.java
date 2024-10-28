@@ -1,16 +1,17 @@
 package ee.mihkel.veebipood.controller;
 
 import ee.mihkel.veebipood.entity.Nutrients;
-import ee.mihkel.veebipood.repository.NutrientsRepository;
 import ee.mihkel.veebipood.repository.ProductRepository;
 import ee.mihkel.veebipood.entity.Product;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:3000")
 @RestController // annotatsioon @ -> sellega võtab API päringuid vastu
+//@CrossOrigin(origins = "http://localhost:3000")
 public class ProductController {
 //    List<Product> products = new ArrayList<>(Arrays.asList(
 //            new Product("Coca"),
@@ -22,13 +23,20 @@ public class ProductController {
     @Autowired
     ProductRepository productRepository;
 
-    @Autowired
-    NutrientsRepository nutrientsRepository;
-
     // localhost:8080/products
-    @GetMapping("/products")
-    public List<Product> getProducts() {
+    @GetMapping("/all-products")
+    public List<Product> getAllProducts() {
         return productRepository.findAll(); // SELECT * FROM product;
+    }
+
+    @GetMapping("/products")
+    public Page<Product> getProducts(Pageable pageable) {
+        return productRepository.findAll(pageable); // SELECT * FROM product;
+    }
+
+    @GetMapping("/product")
+    public Product getProduct(@RequestParam Long id) {
+        return productRepository.findById(id).orElseThrow(); // .get() ja .orElseThrow() <--- samad
     }
 
     // localhost:8080/add-product?name=Vichy&price=1
@@ -52,8 +60,8 @@ public class ProductController {
 
     @PostMapping("/product")
     public List<Product> saveProduct(@RequestBody Product product) {
-        Nutrients nutrients = nutrientsRepository.save(product.getNutrients());
-        product.setNutrients(nutrients);
+//        Nutrients nutrients = nutrientsRepository.save(product.getNutrients());
+//        product.setNutrients(nutrients);
         productRepository.save(product);
         return productRepository.findAll();
     }

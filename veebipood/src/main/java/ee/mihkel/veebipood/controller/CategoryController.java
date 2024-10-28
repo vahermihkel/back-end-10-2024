@@ -6,11 +6,14 @@ import ee.mihkel.veebipood.repository.CategoryRepository;
 import ee.mihkel.veebipood.repository.ProductRepository;
 import ee.mihkel.veebipood.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+//@CrossOrigin(origins = "http://localhost:3000")
 public class CategoryController {
 
     @Autowired
@@ -31,25 +34,25 @@ public class CategoryController {
 //    }
 
     @GetMapping("category")
-    public List<Category> getCategories() {
-        return categoryRepository.findAll();
+    public ResponseEntity<List<Category>> getCategories() {
+        return ResponseEntity.ok().body(categoryRepository.findAll());
     }
 
     @PostMapping("category")
-    public List<Category> addCategory(@RequestBody Category category) {
+    public ResponseEntity<List<Category>> addCategory(@RequestBody Category category) {
         categoryRepository.save(category);
-        return categoryRepository.findAll();
+        return ResponseEntity.status(201).body(categoryRepository.findAll());
     }
 
     @GetMapping("category-products/{categoryId}")
-    public List<Product> getCategoryProducts(@PathVariable Long categoryId) {
-        return productRepository.findByCategory_Id(categoryId);
+    public ResponseEntity<List<Product>> getCategoryProducts(@PathVariable Long categoryId) {
+        return ResponseEntity.ok().body(productRepository.findByCategory_Id(categoryId));
     }
 
     @GetMapping("protein-category-products/{categoryId}")
-    public int getProteinCategoryProducts(@PathVariable Long categoryId) {
+    public ResponseEntity<Integer> getProteinCategoryProducts(@PathVariable Long categoryId) {
        List<Product> products = productRepository.findByCategory_Id(categoryId);
-        return categoryService.getProteins(products);
+        return ResponseEntity.ok().body(categoryService.getProteins(products));
     }
 
 

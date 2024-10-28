@@ -23,7 +23,7 @@ public class Product {
     private boolean active;
     private String description;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private Nutrients nutrients;
 
     @ManyToOne
