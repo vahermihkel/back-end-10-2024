@@ -1,4 +1,4 @@
-@if(view === "cart") {
+<!-- @if(view === "cart") { -->
   @for (orderRow of cart; track orderRow; let i = $index) {
     <div>{{orderRow.product.name}}</div>
     <div>{{orderRow.product.price.toFixed(2)}} €</div>
@@ -10,18 +10,35 @@
   }
 
   <div>Total in cart: {{calculateTotal()}} €</div>
-  <button (click)="changeView('emailInput')">Go and insert e-mail</button>
-}
+  @if(isLoggedIn) {
+    <button (click)="sendOrderToBE()">Pay</button>
+  } @else {
+    <button routerLink="/login">Login</button>
+  }
 
-@if(view === "emailInput") {
+  @if (cart.length > 0) {
+    <select>
+      @for (pm of parcelMachines; track pm) {
+        <option>{{pm.NAME}}</option>
+      }
+    </select>
+
+    <button (click)="getPMsByCountry('ee')">Est</button>
+    <button (click)="getPMsByCountry('lt')">Lat</button>
+    <button (click)="getPMsByCountry('lv')">Lit</button>
+  }
+
+<!-- } -->
+
+<!-- @if(view === "emailInput") {
   <label>E-mail</label>
   <input [(ngModel)]="email" type="text">
   <button (click)="changeView('pay')">Insert</button>
-}
+} -->
 
-@if(view === "pay") {
+<!-- @if(view === "pay") {
   <button (click)="sendOrderToBE()">Maksa ja telli</button>
-}
+} -->
 
 <!-- <div *ngFor="let orderRow of cart"></div> -->
 <!-- <div *ngIf="view==='emailInput'"> <input /> </div> -->

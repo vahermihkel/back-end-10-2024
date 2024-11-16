@@ -1,15 +1,20 @@
 package ee.mihkel.veebipood.controller;
 
 import ee.mihkel.veebipood.entity.Nutrients;
+import ee.mihkel.veebipood.exception.ValidationException;
 import ee.mihkel.veebipood.repository.ProductRepository;
 import ee.mihkel.veebipood.entity.Product;
+import ee.mihkel.veebipood.service.ProductService;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Log4j2
 @RestController // annotatsioon @ -> sellega võtab API päringuid vastu
 //@CrossOrigin(origins = "http://localhost:3000")
 public class ProductController {
@@ -23,45 +28,49 @@ public class ProductController {
     @Autowired
     ProductRepository productRepository;
 
+    @Autowired
+    ProductService productService;
+
     // localhost:8080/products
-    @GetMapping("/all-products")
+    @GetMapping("/products")
     public List<Product> getAllProducts() {
         return productRepository.findAll(); // SELECT * FROM product;
     }
 
-    @GetMapping("/products")
+    @GetMapping("/public-products")
     public Page<Product> getProducts(Pageable pageable) {
-        return productRepository.findAll(pageable); // SELECT * FROM product;
+        return productRepository.findAll(pageable);
     }
 
     @GetMapping("/product")
     public Product getProduct(@RequestParam Long id) {
-        return productRepository.findById(id).orElseThrow(); // .get() ja .orElseThrow() <--- samad
+        return productRepository.findById(id).orElse(null); // .get() ja .orElseThrow() <--- samad
     }
 
     // localhost:8080/add-product?name=Vichy&price=1
     // localhost:8080/add-product/Vichy
-    @GetMapping("/add-product")
-    public List<Product> addProduct(@RequestParam String name, @RequestParam double price) {
-//        products.add(new Product(name));
-        productRepository.save(new Product(name));
-        return productRepository.findAll();
-    }
+//    @PostMapping("/products")
+//    public List<Product> addProduct(@RequestParam String name, @RequestParam double price) {
+////        products.add(new Product(name));
+//        productRepository.save(new Product(name));
+//        return productRepository.findAll();
+//    }
 
     // localhost:8080/add-product?name=Vichy&kategooria=Vesi   <--- järjekord pole tähtis
     // localhost:8080/add-product/Vichy/vesi    <--- järjekord on tähtis
 
     // localhost:8080/delete-product/0
-    @GetMapping("/delete-product/{id}")
+    @DeleteMapping("/products/{id}")
     public List<Product> deleteProduct(@PathVariable Long id) {
         productRepository.deleteById(id);
         return productRepository.findAll();
     }
 
-    @PostMapping("/product")
-    public List<Product> saveProduct(@RequestBody Product product) {
+    @PostMapping("/products")
+    public List<Product> saveProduct(@RequestBody Product product) throws ValidationException {
 //        Nutrients nutrients = nutrientsRepository.save(product.getNutrients());
 //        product.setNutrients(nutrients);
+        productService.validateProduct(product);
         productRepository.save(product);
         return productRepository.findAll();
     }
@@ -70,11 +79,9 @@ public class ProductController {
 //        String[] stringarray = {"Coca", "Fanta", "Sprite"};
 //        return stringarray;
 //    }
-}
 
-// 18.10 R kell 9.00.
-// 1. andmebaas ja sidumine
-// 2. PostMapping, PutMapping -> Postman
-// 3. Service, kaustade struktuur
-// 4. @Autowired
-// 22.10 T kell 9.00
+    @GetMapping("/find-by-name")
+    public Page<Product> findProductsByName(@RequestParam String name, Pageable pageable) {
+        return productRepository.findByNameContainsIgnoreCase(name, pageable);
+    }
+}

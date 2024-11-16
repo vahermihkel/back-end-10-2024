@@ -1,9 +1,12 @@
 package ee.mihkel.veebipood.controller;
 
 import ee.mihkel.veebipood.entity.Order;
+import ee.mihkel.veebipood.entity.Person;
 import ee.mihkel.veebipood.repository.OrderRepository;
 import ee.mihkel.veebipood.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,7 +35,11 @@ public class OrderController {
 
     @PostMapping("order")
     public List<Order> saveOrder(@RequestBody Order order) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        Person person = new Person();
+        person.setEmail(email);
+        order.setPerson(person); // kuna on ainult e-mail tähtis, siis ei pea võtma andmebaasist tervet Personit
         orderService.saveOrder(order);
-        return orderRepository.findByPerson_Email(order.getPerson().getEmail());
+        return orderRepository.findByPerson_Email(email);
     }
 }

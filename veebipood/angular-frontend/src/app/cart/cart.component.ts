@@ -3,23 +3,32 @@ import { OrderRow } from '../models/OrderRow';
 import { FormsModule } from '@angular/forms';
 import { OrderService } from '../services/order.service';
 import { Order } from '../models/Order';
+import { RouterLink } from '@angular/router';
+import { ParcelMachineService } from '../services/parcel-machine.service';
 
 @Component({
   selector: 'app-cart',
   standalone: true,
-  imports: [FormsModule], // HTMLs olevad eriasjad
+  imports: [FormsModule, RouterLink], // HTMLs olevad eriasjad
   templateUrl: './cart.component.html',
   styleUrl: './cart.component.css'
 })
 export class CartComponent {
   cart: OrderRow[] = [];
-  view = "cart";
-  email = "";
+  isLoggedIn = sessionStorage.getItem("token") !== null;
+  // view = "cart";
+  // email = "";
+  parcelMachines: any[] = [];
 
-  constructor(private orderService: OrderService) {} // TS-s olevad teised failid
+  constructor(private orderService: OrderService,
+    private parcelMachineService: ParcelMachineService
+  ) {} // TS-s olevad teised failid
 
   ngOnInit(): void {
     this.cart = JSON.parse(localStorage.getItem("cart") || "[]");
+    this.parcelMachineService.getParcelMachines().subscribe(res => {
+      this.parcelMachines = res;
+    })
   }
 
   decreaseQuantity(index: number) {
@@ -48,15 +57,24 @@ export class CartComponent {
     return sum;
   }
 
-  changeView(newView: string) {
-    this.view = newView;
-  }
+  // changeView(newView: string) {
+  //   this.view = newView;
+  // }
 
   sendOrderToBE() {
     const order: Order = {
-      person: {email: this.email},
+      // person: {email: this.email},
       orderRows: this.cart
     };
+    if (sessionStorage.getItem("token") === null) {
+      return;
+    }
     this.orderService.saveOrder(order).subscribe();
+  }
+
+  getPMsByCountry(country: string) {
+    this.parcelMachineService.getParcelMachinesByCountry(country).subscribe(res => {
+      this.parcelMachines = res;
+    })
   }
 }

@@ -1,0 +1,25 @@
+<span class="error">{{message}}</span>
+
+<form #addProductForm="ngForm" (submit)="addProduct(addProductForm)">
+  <label>ID</label> <br>
+  <input ngModel name="id" type="text"> <br>
+  <label>Name</label> <br>
+  <input ngModel name="name" type="text"> <br>
+  <label>Price</label> <br>
+  <input ngModel name="price" type="text"> <br>
+  <label>Image</label> <br>
+  <input ngModel name="image" type="text"> <br>
+  <label>Active</label> <br>
+  <input ngModel name="active" type="checkbox"> <br>
+  <label>Description</label> <br>
+  <input ngModel name="description" type="text"> <br>
+  <label>Protein</label> <br>
+  <input ngModel name="protein" type="text"> <br>
+  <label>Carbohydrate</label> <br>
+  <input ngModel name="carbohydrate" type="text"> <br>
+  <label>Fat</label> <br>
+  <input ngModel name="fat" type="text"> <br>
+  <label>Category</label> <br>
+  <input ngModel name="category" type="text"> <br>
+  <button>Add</button>
+</form>
