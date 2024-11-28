@@ -1,8 +1,8 @@
 package ee.mihkel.veebipood.controller;
 
 import ee.mihkel.veebipood.model.ParcelMachine;
-import ee.mihkel.veebipood.model.SupplierProduct;
-import ee.mihkel.veebipood.model.SupplierProductEscuela;
+import ee.mihkel.veebipood.model.supplier.SupplierProduct;
+import ee.mihkel.veebipood.model.supplier.SupplierProductEscuela;
 import ee.mihkel.veebipood.service.ParcelMachineService;
 import ee.mihkel.veebipood.service.SupplierService;
 import org.springframework.beans.factory.annotation.Autowired;

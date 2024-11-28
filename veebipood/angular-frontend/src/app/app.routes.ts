@@ -10,6 +10,7 @@ import { AddProductComponent } from './admin/add-product/add-product.component';
 import { authGuard } from './guards/auth.guard';
 import { SupplierComponent } from './admin/supplier/supplier.component';
 import { SupplierEscuelaComponent } from './admin/supplier-escuela/supplier-escuela.component';
+import { PaymentCheckComponent } from './payment-check/payment-check.component';
 
 export const routes: Routes = [
   {path: "", component: HomepageComponent},
@@ -22,5 +23,5 @@ export const routes: Routes = [
   {path: "supplier", component: SupplierComponent, canActivate: [authGuard]},
   {path: "supplier-escuela", component: SupplierEscuelaComponent, canActivate: [authGuard]},
   {path: "product/:id", component: ProductDetailComponent},
-
+  {path: "payment", component: PaymentCheckComponent},
 ];

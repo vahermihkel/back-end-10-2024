@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Optional;
 
 @Log4j2
 @RestController
@@ -48,13 +49,16 @@ public class AuthController {
     }
 
     @PostMapping("login")
-    public Token login(@RequestBody EmailPassword emailPassword) {
-        Person person = personRepository.findById(emailPassword.getEmail()).orElseThrow();
-        if (encoder.matches(emailPassword.getPassword(), person.getPassword())) {
-           return authService.getToken(person);
+    public Token login(@RequestBody EmailPassword emailPassword) throws ValidationException {
+        Optional<Person> personOptional = personRepository.findById(emailPassword.getEmail());
+        if (personOptional.isEmpty()) {
+            throw new ValidationException("E-mail pole korrektne");
+        }
+        Person person = personOptional.get();
+        if (!encoder.matches(emailPassword.getPassword(), person.getPassword())) {
+            throw new ValidationException("Parool pole korrektne");
         };
-        // siia pigem exceptioni väljaviskamine
-        return new Token();
+        return authService.getToken(person);
     }
 
     @GetMapping("admin")

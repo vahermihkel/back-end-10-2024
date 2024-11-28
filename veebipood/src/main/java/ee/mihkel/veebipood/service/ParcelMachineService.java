@@ -1,6 +1,7 @@
 package ee.mihkel.veebipood.service;
 
 import ee.mihkel.veebipood.model.ParcelMachine;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -13,8 +14,11 @@ import java.util.List;
 @Service
 public class ParcelMachineService {
 
+    @Autowired
+    RestTemplate restTemplate;
+
     public List<ParcelMachine> getParcelMachines() {
-        RestTemplate restTemplate = new RestTemplate();
+        //RestTemplate restTemplate = new RestTemplate();
         String url = "https://www.omniva.ee/locations.json";
         ResponseEntity<ParcelMachine[]> response = restTemplate.exchange(
                 url,

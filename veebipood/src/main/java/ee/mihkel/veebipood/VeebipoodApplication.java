@@ -29,7 +29,9 @@ public class VeebipoodApplication {
 //12. R 22.11 - Unit Testid
 //13. T 26.11 -
 //14. N 28.11
-//15. T 03.12
-//16. R 06.12
-//17. T 10.12
-//18. R 20.12 lõpuprojekt
+// tõstatage kodustes töödes probleeme. siinses rakenduses probleeme/edasiarendusi
+// huvipakkuvaid teemasid
+//15. T 03.12 Angular
+//16. R 06.12 cron
+//17. K 11.12 Docker
+//18. K 18.12 lõpuprojekt  2ak/h  9.00-10.30

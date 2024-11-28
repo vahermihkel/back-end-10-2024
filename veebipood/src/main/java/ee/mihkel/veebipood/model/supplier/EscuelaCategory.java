@@ -1,4 +1,4 @@
-package ee.mihkel.veebipood.model;
+package ee.mihkel.veebipood.model.supplier;
 
 import lombok.Data;
 

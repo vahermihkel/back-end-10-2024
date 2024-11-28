@@ -20,7 +20,7 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@SequenceGenerator(name = "seq", initialValue = 123000, allocationSize = 1)
+@SequenceGenerator(name = "seq", initialValue = 1238765, allocationSize = 1)
 @Table(name="orders") // vahetame tabeli nime
 public class Order {
     @Id
@@ -42,6 +42,9 @@ public class Order {
 
     private Date creation;
 
-    @ColumnDefault("0")
+//    @ColumnDefault("0")
     private double totalSum;
+
+//    @ColumnDefault("false")
+    private boolean paid;
 }

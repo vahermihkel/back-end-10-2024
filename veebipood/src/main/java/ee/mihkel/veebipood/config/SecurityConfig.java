@@ -26,6 +26,8 @@ public class SecurityConfig {
                 .cors().and().headers().xssProtection().disable().and()
                 .csrf().disable()
                 .authorizeHttpRequests(requests -> requests
+                        .requestMatchers("/v3/api-docs/**").permitAll()
+                        .requestMatchers("/swagger-ui/**").permitAll()
                         .requestMatchers("/public-products").permitAll()
                         .requestMatchers("/product").permitAll()
                         .requestMatchers("/find-by-name").permitAll()
