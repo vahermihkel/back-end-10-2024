@@ -4,39 +4,34 @@ import { Product } from '../models/Product';
 import { OrderRow } from '../models/OrderRow';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { PaginationComponent } from "./pagination/pagination.component";
+import { SearchBarComponent } from "./search-bar/search-bar.component";
+import { NameShortenerPipe } from '../pipes/name-shortener.pipe';
 
 @Component({
   selector: 'app-homepage',
   standalone: true,
-  imports: [RouterLink, FormsModule],
+  imports: [RouterLink, FormsModule, 
+    PaginationComponent, SearchBarComponent,
+    NameShortenerPipe
+  ],
   templateUrl: './homepage.component.html',
   styleUrl: './homepage.component.css'
 })
 export class HomepageComponent implements OnInit {
   products: Product[] = [];
-  search = "";
-  page = 0;
   totalPages = 0;
   totalElements = 0;
+  nameLength = 5;
 
   constructor(private productService: ProductService) {}
 
   ngOnInit(): void {
-    this.fetchProducts();
+    this.fetchProducts(0);
   }
 
-  previousPage() {
-    this.page--;
-    this.fetchProducts();
-  }
-
-  nextPage() {
-    this.page++;
-    this.fetchProducts();
-  }
-
-  fetchProducts() {
-    this.productService.getProducts(this.page, 3).subscribe(response => {
+  fetchProducts(page: number) {
+    this.productService.getProducts(page, 3).subscribe(response => {
       this.products = response.content;
       this.totalPages = response.totalPages;
       this.totalElements = response.totalElements;
@@ -56,8 +51,8 @@ export class HomepageComponent implements OnInit {
     localStorage.setItem("cart", JSON.stringify(cartLS));
   }
 
-  searchFromProducts() {
-    this.productService.getProductsByName(this.search).subscribe(response => 
+  fetchProductsByName(search: string) {
+    this.productService.getProductsByName(search, 0, 3).subscribe(response => 
       this.products = response.content
     )
   }

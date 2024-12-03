@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { Product } from '../models/Product';
 import { ProductPage } from '../models/ProductPage';
 
@@ -19,8 +19,9 @@ export class ProductService {
     return this.http.get<Product>("http://localhost:8080/product", {params: {id: productId}});
   }
 
-  getProductsByName(search: string): Observable<ProductPage> {
-    return this.http.get<ProductPage>("http://localhost:8080/find-by-name", {params: {name: search}});
+  getProductsByName(search: string, pageNr: number, pageSize: number): Observable<ProductPage> {
+    return this.http.get<ProductPage>("http://localhost:8080/find-by-name",
+      {params: {name: search, page: pageNr, size: pageSize}});
   }
 
   addProduct(product: Product): Observable<void> {

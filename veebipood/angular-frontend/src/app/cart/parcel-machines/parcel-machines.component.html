@@ -1,0 +1,9 @@
+<select>
+  @for (pm of parcelMachines; track pm) {
+    <option>{{pm.NAME}}</option>
+  }
+</select>
+
+<button (click)="getPMsByCountry('ee')">Est</button>
+<button (click)="getPMsByCountry('lt')">Lat</button>
+<button (click)="getPMsByCountry('lv')">Lit</button>

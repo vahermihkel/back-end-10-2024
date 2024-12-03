@@ -12,3 +12,7 @@ import { NavbarComponent } from './navbar/navbar.component';
 export class AppComponent {
   title = 'angular-frontend';
 }
+
+// subscribe deprecated
+// bootstrapis menüü lahti
+// alamkomponendid -> komponentide vaheline suhtlus

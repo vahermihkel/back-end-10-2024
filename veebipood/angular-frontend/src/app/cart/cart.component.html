@@ -1,3 +1,6 @@
+<div>{{date | date:'HH:mm dd.MM.yyyy'}}</div>
+
+
 <!-- @if(view === "cart") { -->
   @for (orderRow of cart; track orderRow; let i = $index) {
     <div>{{orderRow.product.name}}</div>
@@ -11,21 +14,13 @@
 
   <div>Total in cart: {{calculateTotal()}} €</div>
   @if(isLoggedIn) {
-    <button (click)="sendOrderToBE()">Pay</button>
+    <app-payment [cartInput]="cart" />
   } @else {
     <button routerLink="/login">Login</button>
   }
 
   @if (cart.length > 0) {
-    <select>
-      @for (pm of parcelMachines; track pm) {
-        <option>{{pm.NAME}}</option>
-      }
-    </select>
-
-    <button (click)="getPMsByCountry('ee')">Est</button>
-    <button (click)="getPMsByCountry('lt')">Lat</button>
-    <button (click)="getPMsByCountry('lv')">Lit</button>
+    <app-parcel-machines />
   }
 
 <!-- } -->
