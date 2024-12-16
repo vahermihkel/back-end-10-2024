@@ -2,7 +2,9 @@ package ee.mihkel.veebipood;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
+@EnableScheduling // võimaldab CRON kasutada, lisaks peab application.properties seadistama
 @SpringBootApplication
 public class VeebipoodApplication {
 
@@ -32,6 +34,10 @@ public class VeebipoodApplication {
 // tõstatage kodustes töödes probleeme. siinses rakenduses probleeme/edasiarendusi
 // huvipakkuvaid teemasid
 //15. T 03.12 Angular
-//16. R 06.12 cron
-//17. K 11.12 Docker
-//18. K 18.12 lõpuprojekt  2ak/h  9.00-10.30
+//16. R 06.12 cron   2ak/h
+//17. K 11.12 Docker  9.00-12.15   Docker
+//18. K 18.12 lõpuprojekt  4ak/h  9.00-12.15 SecurityConfigus asjade peale panema
+
+// 06.12  2ak/h
+// 11.12  4ak/h
+// 12.12  4ak/h

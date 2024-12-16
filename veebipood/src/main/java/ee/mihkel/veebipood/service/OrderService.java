@@ -1,5 +1,6 @@
 package ee.mihkel.veebipood.service;
 
+import ee.mihkel.veebipood.cache.ProductCache;
 import ee.mihkel.veebipood.entity.Order;
 import ee.mihkel.veebipood.entity.OrderRow;
 import ee.mihkel.veebipood.entity.Product;
@@ -17,6 +18,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.time.ZonedDateTime;
 import java.util.Date;
+import java.util.concurrent.ExecutionException;
 
 @Service
 public class OrderService {
@@ -38,14 +40,18 @@ public class OrderService {
     @Autowired
     RestTemplate restTemplate;
 
-    public Order saveOrder(Order order) {
+    @Autowired
+    ProductCache productCache;
+
+    public Order saveOrder(Order order) throws ExecutionException {
         //List<OrderRow> orderRows = orderRowRepository.saveAll(order.getOrderRows());
         // order.setOrderRows(orderRows);
 
         order.setCreation(new Date());
         double totalSum = 0;
         for(OrderRow row: order.getOrderRows()){
-            Product dbProduct = productRepository.findById(row.getProduct().getId()).orElseThrow();
+//            Product dbProduct = productRepository.findById(row.getProduct().getId()).orElseThrow();
+            Product dbProduct = productCache.getProduct(row.getProduct().getId());
             totalSum += dbProduct.getPrice() * row.getPcs();
         }
         order.setTotalSum(totalSum);

@@ -1,5 +1,7 @@
 package ee.mihkel.veebipood.controller;
 
+import ee.mihkel.veebipood.model.JohnDoe;
+import ee.mihkel.veebipood.model.JohnDoeXML;
 import ee.mihkel.veebipood.model.ParcelMachine;
 import ee.mihkel.veebipood.model.supplier.SupplierProduct;
 import ee.mihkel.veebipood.model.supplier.SupplierProductEscuela;
@@ -40,4 +42,10 @@ public class ApiController {
     public List<SupplierProductEscuela> getSupplierEscuelaProducts() {
         return supplierService.getEscuelaProducts();
     }
+
+    @GetMapping("xml-data")
+    public JohnDoe getXMLData() {
+        return supplierService.getXMLData();
+    }
+
 }

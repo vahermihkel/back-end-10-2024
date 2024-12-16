@@ -1,6 +1,6 @@
 package ee.mihkel.veebipood.controller;
 
-import ee.mihkel.veebipood.entity.Nutrients;
+import ee.mihkel.veebipood.cache.ProductCache;
 import ee.mihkel.veebipood.exception.ValidationException;
 import ee.mihkel.veebipood.repository.ProductRepository;
 import ee.mihkel.veebipood.entity.Product;
@@ -9,10 +9,10 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 @Log4j2
 @RestController // annotatsioon @ -> sellega võtab API päringuid vastu
@@ -31,6 +31,9 @@ public class ProductController {
     @Autowired
     ProductService productService;
 
+    @Autowired
+    ProductCache productCache;
+
     // localhost:8080/products
     @GetMapping("/products")
     public List<Product> getAllProducts() {
@@ -43,8 +46,9 @@ public class ProductController {
     }
 
     @GetMapping("/product")
-    public Product getProduct(@RequestParam Long id) {
-        return productRepository.findById(id).orElse(null); // .get() ja .orElseThrow() <--- samad
+    public Product getProduct(@RequestParam Long id) throws ExecutionException {
+        return productCache.getProduct(id);
+//        return productRepository.findById(id).orElse(null); // .get() ja .orElseThrow() <--- samad
     }
 
     // localhost:8080/add-product?name=Vichy&price=1
@@ -63,16 +67,27 @@ public class ProductController {
     @DeleteMapping("/products/{id}")
     public List<Product> deleteProduct(@PathVariable Long id) {
         productRepository.deleteById(id);
+        productCache.emptyCache();
         return productRepository.findAll();
     }
 
     @PostMapping("/products")
     public List<Product> saveProduct(@RequestBody Product product) throws ValidationException {
-//        Nutrients nutrients = nutrientsRepository.save(product.getNutrients());
-//        product.setNutrients(nutrients);
         productService.validateProduct(product);
-        productRepository.save(product);
+        if (productRepository.findById(product.getId()).isEmpty()) {
+            productRepository.save(product);
+        }
         return productRepository.findAll();
+    }
+
+    @PutMapping("/products")
+    public List<Product> editProduct(@RequestBody Product product) throws ValidationException {
+        productService.validateProduct(product);
+        if (productRepository.findById(product.getId()).isPresent()) {
+            productRepository.save(product);
+            productCache.emptyCache();
+        }
+        return productRepository.findAllByOrderByIdAsc();
     }
 
 //    public String[] getProductsAsArray() {

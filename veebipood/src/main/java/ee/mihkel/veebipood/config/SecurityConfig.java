@@ -37,7 +37,8 @@ public class SecurityConfig {
                         .requestMatchers("/supplier").permitAll()
                         .requestMatchers("/supplier-escuela").permitAll()
                         .requestMatchers("/parcel-machines/**").permitAll()
-
+                        .requestMatchers("/xml-data").permitAll()
+                        .requestMatchers(HttpMethod.PUT,"/products").permitAll()
                         .requestMatchers(HttpMethod.GET,"/categories").permitAll() // GET
                         .requestMatchers(HttpMethod.POST, "/categories").hasAuthority("admin") // POST
                         .requestMatchers("/products/**").hasAuthority("admin")
